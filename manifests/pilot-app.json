@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "product": "pilot-app",
+  "name": "AmpRepo Pilot",
+  "version": "0.5.0",
+  "date": "2026-11-24",
+  "release": "https://github.com/AmpRepo/AmpRepo.Downloads/releases/tag/pilot-app-v0.5.0",
+  "notes": [
+    "AmpRepo Pilot now runs on Mac (Apple silicon and Intel) and on Linux, as well as Windows.",
+    "Downloads for every platform are at downloads.amprepo.com, with a checksum for each file.",
+    "The app checks downloads.amprepo.com for new versions and links there when one is out.",
+    "On Linux, a USB rules file gives the app access to the device without running it as root.",
+    "Updating the device's firmware from the app still needs Windows for now."
+  ],
+  "files": [
+    {
+      "os": "windows",
+      "arch": "x64",
+      "kind": "installer",
+      "name": "AmpRepo.Pilot-0.5.0-x64.msi",
+      "url": "https://github.com/AmpRepo/AmpRepo.Downloads/releases/download/pilot-app-v0.5.0/AmpRepo.Pilot-0.5.0-x64.msi",
+      "size": 72290830,
+      "sha256": "efbcd6fde244dcf00c4e5d936847653b2f49838d9ce4a26e1d4bbfbbc555ba41"
+    },
+    {
+      "os": "macos",
+      "arch": "arm64",
+      "kind": "app-zip",
+      "name": "AmpRepo.Pilot-0.5.0-arm64-macos.zip",
+      "url": "https://github.com/AmpRepo/AmpRepo.Downloads/releases/download/pilot-app-v0.5.0/AmpRepo.Pilot-0.5.0-arm64-macos.zip",
+      "size": 56538875,
+      "sha256": "689c474358368a78ab82f132c1e749da0897859fe1d7f9478fb9888b242cfd29"
+    },
+    {
+      "os": "macos",
+      "arch": "x64",
+      "kind": "app-zip",
+      "name": "AmpRepo.Pilot-0.5.0-x64-macos.zip",
+      "url": "https://github.com/AmpRepo/AmpRepo.Downloads/releases/download/pilot-app-v0.5.0/AmpRepo.Pilot-0.5.0-x64-macos.zip",
+      "size": 58790351,
+      "sha256": "f66afa7a187be847cc6cc897ad4b38b86611a482bc12744fa0c644c66758f2e9"
+    },
+    {
+      "os": "linux",
+      "arch": "x86_64",
+      "kind": "appimage",
+      "name": "AmpRepo.Pilot-0.5.0-x86_64.AppImage",
+      "url": "https://github.com/AmpRepo/AmpRepo.Downloads/releases/download/pilot-app-v0.5.0/AmpRepo.Pilot-0.5.0-x86_64.AppImage",
+      "size": 53115384,
+      "sha256": "801dcd6dfdc80df2fd59a0f9ebb0e0873a4c649551852db8c9e8e71037356a2f"
+    },
+    {
+      "os": "linux",
+      "arch": null,
+      "kind": "udev-rules",
+      "name": "60-amprepo-pilot.rules",
+      "url": "https://github.com/AmpRepo/AmpRepo.Downloads/releases/download/pilot-app-v0.5.0/60-amprepo-pilot.rules",
+      "size": 594,
+      "sha256": "3ca3e4bdc1a0b7f7d34261c28b5f5df0bd8175aea86b5245d986f18e75da835a"
+    }
+  ]
+}
