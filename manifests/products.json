@@ -1,0 +1,9 @@
+[
+  {
+    "id": "pilot-app",
+    "name": "AmpRepo Pilot",
+    "summary": "The desktop app for the AmpRepo Pilot: patches, amp models, backups and firmware.",
+    "page": "/pilot/app/",
+    "manifest": "/manifests/pilot-app.json"
+  }
+]

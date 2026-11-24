@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "product": "pilot-app",
+  "name": "AmpRepo Pilot",
+  "version": "0.0.0",
+  "date": "2026-01-01",
+  "release": "https://github.com/AmpRepo/AmpRepo.Downloads/releases/tag/pilot-app-v0.0.0",
+  "notes": [
+    "An example note: what changed for users, one line each.",
+    "A second example note."
+  ],
+  "files": [
+    {
+      "os": "windows",
+      "arch": "x64",
+      "kind": "installer",
+      "name": "AmpRepo.Pilot-0.0.0-x64.msi",
+      "url": "https://github.com/AmpRepo/AmpRepo.Downloads/releases/download/pilot-app-v0.0.0/AmpRepo.Pilot-0.0.0-x64.msi",
+      "size": 72233490,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000001"
+    },
+    {
+      "os": "macos",
+      "arch": "arm64",
+      "kind": "app-zip",
+      "name": "AmpRepo.Pilot-0.0.0-arm64-macos.zip",
+      "url": "https://github.com/AmpRepo/AmpRepo.Downloads/releases/download/pilot-app-v0.0.0/AmpRepo.Pilot-0.0.0-arm64-macos.zip",
+      "size": 56215975,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000002"
+    },
+    {
+      "os": "macos",
+      "arch": "x64",
+      "kind": "app-zip",
+      "name": "AmpRepo.Pilot-0.0.0-x64-macos.zip",
+      "url": "https://github.com/AmpRepo/AmpRepo.Downloads/releases/download/pilot-app-v0.0.0/AmpRepo.Pilot-0.0.0-x64-macos.zip",
+      "size": 58492202,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000003"
+    },
+    {
+      "os": "linux",
+      "arch": "x86_64",
+      "kind": "appimage",
+      "name": "AmpRepo.Pilot-0.0.0-x86_64.AppImage",
+      "url": "https://github.com/AmpRepo/AmpRepo.Downloads/releases/download/pilot-app-v0.0.0/AmpRepo.Pilot-0.0.0-x86_64.AppImage",
+      "size": 60817408,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000004"
+    },
+    {
+      "os": "linux",
+      "arch": null,
+      "kind": "udev-rules",
+      "name": "60-amprepo-pilot.rules",
+      "url": "https://github.com/AmpRepo/AmpRepo.Downloads/releases/download/pilot-app-v0.0.0/60-amprepo-pilot.rules",
+      "size": 412,
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000005"
+    }
+  ]
+}

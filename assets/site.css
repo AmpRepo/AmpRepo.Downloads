@@ -1,0 +1,83 @@
+/* Colors from the AmpRepo Pilot app's theme (PilotTheme.axaml): light by default, dark on request. */
+:root {
+  --accent: #B96A08;
+  --accent-hover: #D9820F;
+  --accent-tint: rgba(185, 106, 8, 0.14);
+  --surface: #FFFDF9;
+  --surface-alt: #F6F2EC;
+  --border: #DDD3C4;
+  --rule: #EDE5D8;
+  --text: #2B2620;
+  --text-muted: rgba(43, 38, 32, 0.62);
+  --on-accent: #FFFFFF;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent: #D9820F;
+    --accent-hover: #E8A04A;
+    --accent-tint: rgba(217, 130, 15, 0.16);
+    --surface: #26221E;
+    --surface-alt: #1E1B18;
+    --border: #3A332C;
+    --rule: #332D27;
+    --text: #E8E2DA;
+    --text-muted: rgba(232, 226, 218, 0.62);
+    --on-accent: #1E1B18;
+  }
+}
+
+* { box-sizing: border-box; }
+html { background: var(--surface-alt); }
+body {
+  margin: 0;
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+}
+a { color: var(--accent); }
+a:hover { color: var(--accent-hover); }
+code, pre, .sha { font-family: Consolas, "Cascadia Mono", ui-monospace, monospace; }
+
+.site-header {
+  display: flex; align-items: center; gap: 12px;
+  max-width: 760px; margin: 0 auto; padding: 24px 20px 8px;
+}
+.site-header img { width: 36px; height: 36px; }
+.site-header a { color: var(--text); text-decoration: none; font-weight: 600; font-size: 18px; }
+
+main { max-width: 760px; margin: 0 auto; padding: 8px 20px 48px; }
+h1 { font-size: 28px; margin: 16px 0 4px; }
+h2 { font-size: 20px; margin: 32px 0 8px; padding-top: 16px; border-top: 1px solid var(--rule); }
+h3 { font-size: 16px; margin: 20px 0 6px; }
+.muted { color: var(--text-muted); }
+.small { font-size: 13px; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px 20px; margin: 12px 0;
+}
+.card h2 { border: 0; margin: 0 0 4px; padding: 0; }
+
+.downloads { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+.download {
+  display: grid; grid-template-columns: minmax(260px, auto) 1fr; gap: 4px 16px; align-items: center;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px;
+}
+.download .button {
+  display: inline-block; text-align: center; text-decoration: none; font-weight: 600;
+  padding: 10px 16px; border-radius: 6px; border: 1px solid var(--accent); color: var(--accent);
+}
+.download .button:hover { background: var(--accent-tint); }
+.download.primary { border-color: var(--accent); }
+.download.primary .button { background: var(--accent); color: var(--on-accent); }
+.download.primary .button:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.download .file { overflow-wrap: anywhere; }
+.download .sha { grid-column: 1 / -1; font-size: 12px; color: var(--text-muted); overflow-wrap: anywhere; }
+.download .extra { grid-column: 1 / -1; font-size: 14px; }
+@media (max-width: 600px) { .download { grid-template-columns: 1fr; } }
+
+pre {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+  padding: 10px 12px; overflow-x: auto; font-size: 14px;
+}
+.notice { background: var(--surface); border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 4px; }
+footer { max-width: 760px; margin: 0 auto; padding: 0 20px 32px; font-size: 13px; color: var(--text-muted); }
