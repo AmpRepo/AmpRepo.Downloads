@@ -1,7 +1,8 @@
-/* Colors from the AmpRepo Pilot app's theme (PilotTheme.axaml): light by default, dark on request. */
+/* Colors from the AmpRepo Pilot app's theme: light by default, dark on request. The light accent is
+   darker than the app's (#B96A08) so text and buttons on it meet WCAG AA contrast (4.5:1). */
 :root {
-  --accent: #B96A08;
-  --accent-hover: #D9820F;
+  --accent: #9A5606;
+  --accent-hover: #7F4705;
   --accent-tint: rgba(185, 106, 8, 0.14);
   --surface: #FFFDF9;
   --surface-alt: #F6F2EC;

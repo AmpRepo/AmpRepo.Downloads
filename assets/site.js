@@ -11,7 +11,8 @@ function detectOs() {
   const platform = (navigator.userAgentData && navigator.userAgentData.platform) || "";
   const text = (platform + " " + ua).toLowerCase();
   if (text.includes("windows")) return "windows";
-  if (text.includes("mac")) return "macos";
+  // iPadOS Safari reports itself as a Mac; a touch screen gives it away.
+  if (text.includes("mac")) return navigator.maxTouchPoints > 1 ? null : "macos";
   if (text.includes("linux")) return "linux";
   return null;
 }
@@ -19,17 +20,44 @@ function detectOs() {
 // A same-origin path in ?manifest= replaces the default (for checking the page against a sample).
 function manifestUrl(defaultUrl) {
   const override = new URLSearchParams(location.search).get("manifest");
-  return override && override.startsWith("/") && !override.startsWith("//") ? override : defaultUrl;
+  if (!override || !override.startsWith("/") || override.includes("\\")) return defaultUrl;
+  try {
+    const url = new URL(override, location.origin);
+    return url.origin === location.origin ? url.pathname : defaultUrl;
+  } catch {
+    return defaultUrl;
+  }
+}
+
+// Only https links leave the page; anything else (javascript:, data:, a typo) is dropped.
+function safeHref(value) {
+  try { return new URL(value).protocol === "https:" ? value : null; } catch { return null; }
+}
+
+function link(href, text) {
+  const safe = safeHref(href);
+  return safe ? el("a", { href: safe }, text) : el("span", {}, text);
 }
 
 async function fetchJson(url) {
-  const response = await fetch(url, { cache: "no-cache" });
-  if (!response.ok) return null;
-  try { return await response.json(); } catch { return null; }
+  try {
+    const response = await fetch(url, { cache: "no-cache" });
+    return response.ok ? await response.json() : null;
+  } catch {
+    return null;   // offline, blocked, or not JSON
+  }
+}
+
+const isText = v => typeof v === "string" && v.length > 0;
+
+function isFile(f) {
+  return f && typeof f === "object" && isText(f.os) && isText(f.kind) && isText(f.name)
+    && safeHref(f.url) !== null && Number.isFinite(f.size) && isText(f.sha256);
 }
 
 function isManifest(m) {
-  return m && m.schema === SCHEMA && typeof m.version === "string" && Array.isArray(m.files);
+  return m && m.schema === SCHEMA && isText(m.name) && isText(m.version) && isText(m.date)
+    && Array.isArray(m.files);
 }
 
 function el(tag, attrs, ...children) {
@@ -52,14 +80,14 @@ const BUTTONS = [
 ];
 
 function findFile(m, os, arch, kind) {
-  return m.files.find(f => f.os === os && f.arch === arch && f.kind === kind);
+  return m.files.find(f => isFile(f) && f.os === os && (f.arch ?? null) === arch && f.kind === kind);
 }
 
 function downloadRow(m, button, primary) {
   const file = findFile(m, button.os, button.arch, button.kind);
   if (!file) return null;
   const row = el("div", { class: "download" + (primary ? " primary" : "") },
-    el("a", { class: "button", href: file.url }, button.label),
+    el("a", { class: "button", href: file.url }, button.label),   // file.url passed isFile's https check
     el("span", { class: "file" }, file.name + " · " + megabytes(file.size)),
     el("span", { class: "sha" }, "sha256 " + file.sha256));
   if (button.os === "macos" && button.arch === "x64") {
@@ -70,7 +98,7 @@ function downloadRow(m, button, primary) {
     const rules = findFile(m, "linux", null, "udev-rules");
     if (rules) {
       row.append(el("span", { class: "extra" }, "For USB access to the device: ",
-        el("a", { href: rules.url }, rules.name), " (see Installing → Linux below)."));
+        link(rules.url, rules.name), " (see Installing → Linux below)."));
     }
   }
   return row;
@@ -78,15 +106,16 @@ function downloadRow(m, button, primary) {
 
 async function renderProduct(defaultManifestUrl, root) {
   const m = await fetchJson(manifestUrl(defaultManifestUrl));
+  const heading = root.querySelector("h1");
   root.replaceChildren();
   if (!isManifest(m)) {
+    if (heading) root.append(heading);
     root.append(el("p", { class: "notice" }, "The first release is on its way."));
     return;
   }
   document.title = m.name + " " + m.version + " · AmpRepo Downloads";
   root.append(el("h1", {}, m.name + " " + m.version));
-  root.append(el("p", { class: "muted" }, "Released " + m.date + " · ",
-    el("a", { href: m.release }, "Release page")));
+  root.append(el("p", { class: "muted" }, "Released " + m.date + " · ", link(m.release, "Release page")));
 
   const os = detectOs();
   const ordered = BUTTONS.filter(b => b.os === os).concat(BUTTONS.filter(b => b.os !== os));
@@ -98,25 +127,31 @@ async function renderProduct(defaultManifestUrl, root) {
   }
   root.append(list);
 
-  if (Array.isArray(m.notes) && m.notes.length) {
+  const notes = Array.isArray(m.notes) ? m.notes.filter(isText) : [];
+  if (notes.length) {
     root.append(el("h2", {}, "What's new in " + m.version));
-    root.append(el("ul", {}, ...m.notes.map(note => el("li", {}, String(note)))));
+    root.append(el("ul", {}, ...notes.map(note => el("li", {}, note))));
   }
+  const product = isText(m.product) ? m.product : "";
   root.append(el("p", { class: "small" },
-    el("a", { href: "https://github.com/AmpRepo/AmpRepo.Downloads/releases?q=" + encodeURIComponent(m.product) }, "All versions"),
+    link("https://github.com/AmpRepo/AmpRepo.Downloads/releases?q=" + encodeURIComponent(product), "All versions"),
     " · checksums for every file are in SHA256SUMS.txt on the release page."));
 }
 
+// Product pages are paths on this site; anything else is not linked.
+const isSitePath = v => isText(v) && v.startsWith("/") && !v.startsWith("//") && !v.includes("\\");
+
 async function renderLanding(productsUrl, root) {
   const products = await fetchJson(productsUrl);
+  if (!Array.isArray(products)) return;   // keep the <noscript>-style fallback links
+  const entries = products.filter(p => p && isText(p.name) && isSitePath(p.page) && isSitePath(p.manifest));
+  const manifests = await Promise.all(entries.map(p => fetchJson(p.manifest)));
   root.replaceChildren();
-  if (!Array.isArray(products)) return;
-  for (const p of products) {
-    const m = await fetchJson(p.manifest);
-    const card = el("div", { class: "card" },
+  entries.forEach((p, i) => {
+    const m = manifests[i];
+    root.append(el("div", { class: "card" },
       el("h2", {}, el("a", { href: p.page }, p.name)),
-      el("p", {}, p.summary),
-      el("p", { class: "muted small" }, isManifest(m) ? "Current version " + m.version + " · released " + m.date : "Coming soon."));
-    root.append(card);
-  }
+      el("p", {}, isText(p.summary) ? p.summary : ""),
+      el("p", { class: "muted small" }, isManifest(m) ? "Current version " + m.version + " · released " + m.date : "Coming soon.")));
+  });
 }
